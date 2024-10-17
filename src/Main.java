@@ -1,10 +1,11 @@
-import entity.Animal;
-import entity.Ecosystem;
-import entity.Plant;
+
+
 import repository.EcosystemRepository;
 import repository.FileEcosystemRepository;
 import service.EcosystemService;
+import entity.Ecosystem;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -12,90 +13,106 @@ public class Main {
     private static Scanner scanner;
 
     public static void main(String[] args) {
-        EcosystemRepository repository = new FileEcosystemRepository();
-        service = new EcosystemService(repository);
+        EcosystemRepository repository = FileEcosystemRepository.getInstance(); // Получаем единственный экземпляр
+        service = EcosystemService.getInstance(repository); // Передаем его в EcosystemService
         scanner = new Scanner(System.in);
 
-        start(); // Запускаем основной метод
+        start();
+    }
+
+    private static void printMenu() {
+        System.out.println("1. Create Ecosystem");
+        System.out.println("2. Display Ecosystem");
+        System.out.println("3. Edit Ecosystem");
+        System.out.println("4. Delete Ecosystem");
+        System.out.println("5. Display All Ecosystems");
+        System.out.println("6. Exit");
+        System.out.print("Choose an option: ");
     }
 
     public static void start() {
         while (true) {
-            System.out.println("1. Create Ecosystem");
-            System.out.println("2. Save Ecosystem");
-            System.out.println("3. Load Ecosystem");
-            System.out.println("4. Exit");
-            System.out.print("Choose an option: ");
-
-            int choice = Integer.parseInt(scanner.nextLine());
+            printMenu();
+            int choice = getValidIntInput(scanner, "Choose an option: ");
 
             switch (choice) {
-                case 1:
-                    createEcosystem();
-                    break;
-                case 2:
-                    saveEcosystem();
-                    break;
-                case 3:
-                    loadEcosystem();
-                    break;
-                case 4:
+                case 1 -> createEcosystem();
+                case 2 -> displayEcosystem();
+                case 3 -> editEcosystem();
+                case 4 -> deleteEcosystem();
+                case 5 -> listAllEcosystems();
+                case 6 -> {
                     System.out.println("Exiting...");
                     return;
-                default:
-                    System.out.println("Invalid option. Please try again.");
+                }
+                default -> System.out.println("Invalid option. Please try again.");
             }
         }
     }
 
     private static void createEcosystem() {
-        System.out.print("Enter ecosystem name: ");
-        String name = scanner.nextLine();
-        Ecosystem ecosystem = new Ecosystem(name);
-
-        while (true) {
-            System.out.print("Add animal? (y/n): ");
-            if (scanner.nextLine().equalsIgnoreCase("y")) {
-                System.out.print("Enter animal name: ");
-                String animalName = scanner.nextLine();
-                System.out.print("Enter population: ");
-                int population = Integer.parseInt(scanner.nextLine());
-                ecosystem.addAnimal(new Animal(animalName, population));
-            } else {
-                break;
-            }
-        }
-
-        while (true) {
-            System.out.print("Add plant? (y/n): ");
-            if (scanner.nextLine().equalsIgnoreCase("y")) {
-                System.out.print("Enter plant name: ");
-                String plantName = scanner.nextLine();
-                System.out.print("Enter quantity: ");
-                int quantity = Integer.parseInt(scanner.nextLine());
-                ecosystem.addPlant(new Plant(plantName, quantity));
-            } else {
-                break;
-            }
-        }
-
-        System.out.println("Ecosystem created: " + ecosystem);
+        Ecosystem ecosystem = service.createEcosystem(scanner);
+        service.saveEcosystem(ecosystem);
+        System.out.println("Ecosystem created and saved: " + ecosystem.getName());
     }
 
-    private static void saveEcosystem() {
-        System.out.print("Enter ecosystem name: ");
-        String name = scanner.nextLine();
-        // Здесь предположим, что экосистема уже создана, и мы можем её сохранить
-        // На практике, нужно хранить ссылку на текущую экосистему
-        Ecosystem ecosystem = new Ecosystem(name); // Замените на реальную экосистему
-        service.saveEcosystem(name, ecosystem);
-        System.out.println("Ecosystem saved: " + name);
-    }
-
-    private static void loadEcosystem() {
-        System.out.print("Enter ecosystem name: ");
+    private static void displayEcosystem() {
+        System.out.print("Enter ecosystem name to display: ");
         String name = scanner.nextLine();
         Ecosystem ecosystem = service.loadEcosystem(name);
-        System.out.println("Loaded ecosystem: " + ecosystem);
+
+        if (ecosystem != null) {
+            System.out.println("Ecosystem found: ");
+            System.out.println(ecosystem);
+        } else {
+            System.out.println("Ecosystem not found.");
+        }
+    }
+
+    private static void editEcosystem() {
+        System.out.print("Enter ecosystem name to edit: ");
+        String name = scanner.nextLine();
+        Ecosystem ecosystem = service.loadEcosystem(name);
+
+        if (ecosystem != null) {
+            System.out.println("Current ecosystem: " + ecosystem);
+            service.editEcosystem(ecosystem, scanner);
+            service.saveEcosystem(ecosystem);
+            System.out.println("Ecosystem updated: " + ecosystem.getName());
+        } else {
+            System.out.println("Ecosystem not found.");
+        }
+    }
+
+    private static void deleteEcosystem() {
+        System.out.print("Enter ecosystem name to delete: ");
+        String name = scanner.nextLine();
+        service.deleteEcosystem(name);
+
+
+    }
+
+    private static void listAllEcosystems() {
+        List<String> ecosystemNames = service.getAllEcosystemNames();
+
+        if (ecosystemNames.isEmpty()) {
+            System.out.println("No ecosystems found.");
+        } else {
+            System.out.println("List of all ecosystems:");
+            for (String name : ecosystemNames) {
+                System.out.println("- " + name);
+            }
+        }
+    }
+
+    private static int getValidIntInput(Scanner scanner, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            try {
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+            }
+        }
     }
 }

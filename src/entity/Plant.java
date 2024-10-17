@@ -13,6 +13,10 @@ public class Plant {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getQuantity() {
         return quantity;
     }
@@ -23,6 +27,6 @@ public class Plant {
 
     @Override
     public String toString() {
-        return name + " (Quantity: " + quantity + ")";
+        return "Plant: " + name + ", Quantity: " + quantity;
     }
 }

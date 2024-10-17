@@ -13,6 +13,10 @@ public class Animal {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getPopulation() {
         return population;
     }
@@ -23,6 +27,6 @@ public class Animal {
 
     @Override
     public String toString() {
-        return name + " (Population: " + population + ")";
+        return "Animal: " + name + ", Quantity: " + population;
     }
 }
