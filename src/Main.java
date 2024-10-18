@@ -1,5 +1,3 @@
-
-
 import repository.EcosystemRepository;
 import repository.FileEcosystemRepository;
 import service.EcosystemService;
@@ -8,13 +6,15 @@ import entity.Ecosystem;
 import java.util.List;
 import java.util.Scanner;
 
+import static util.InputValidator.getValidIntInput;
+
 public class Main {
     private static EcosystemService service;
     private static Scanner scanner;
 
     public static void main(String[] args) {
-        EcosystemRepository repository = FileEcosystemRepository.getInstance(); // Получаем единственный экземпляр
-        service = EcosystemService.getInstance(repository); // Передаем его в EcosystemService
+        EcosystemRepository repository = FileEcosystemRepository.getInstance();
+        service = EcosystemService.getInstance(repository);
         scanner = new Scanner(System.in);
 
         start();
@@ -57,6 +57,7 @@ public class Main {
     }
 
     private static void displayEcosystem() {
+        listAllEcosystems();
         System.out.print("Enter ecosystem name to display: ");
         String name = scanner.nextLine();
         Ecosystem ecosystem = service.loadEcosystem(name);
@@ -70,6 +71,7 @@ public class Main {
     }
 
     private static void editEcosystem() {
+        listAllEcosystems();
         System.out.print("Enter ecosystem name to edit: ");
         String name = scanner.nextLine();
         Ecosystem ecosystem = service.loadEcosystem(name);
@@ -85,11 +87,11 @@ public class Main {
     }
 
     private static void deleteEcosystem() {
+        listAllEcosystems();
         System.out.print("Enter ecosystem name to delete: ");
         String name = scanner.nextLine();
         service.deleteEcosystem(name);
-
-
+        System.out.println("Ecosystem deleted: " + name);
     }
 
     private static void listAllEcosystems() {
@@ -99,20 +101,7 @@ public class Main {
             System.out.println("No ecosystems found.");
         } else {
             System.out.println("List of all ecosystems:");
-            for (String name : ecosystemNames) {
-                System.out.println("- " + name);
-            }
-        }
-    }
-
-    private static int getValidIntInput(Scanner scanner, String prompt) {
-        while (true) {
-            System.out.print(prompt);
-            try {
-                return Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a valid number.");
-            }
+            ecosystemNames.forEach(name -> System.out.println("- " + name));
         }
     }
 }

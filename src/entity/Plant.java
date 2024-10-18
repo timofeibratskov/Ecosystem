@@ -26,6 +26,19 @@ public class Plant {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Plant)) return false;
+        Plant plant = (Plant) obj;
+        return name.equals(plant.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
     public String toString() {
         return "Plant: " + name + ", Quantity: " + quantity;
     }
