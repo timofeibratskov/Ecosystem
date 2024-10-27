@@ -7,11 +7,13 @@ public class Ecosystem {
     private String name;
     private HashSet<Animal> animals;
     private HashSet<Plant> plants;
+    private EnvironmentSettings environmentSettings;
 
     public Ecosystem(String name) {
         this.name = name;
         this.animals = new HashSet<>();
         this.plants = new HashSet<>();
+        this.environmentSettings = new EnvironmentSettings(24, 1000, 5);
     }
 
     public String getName() {
@@ -20,6 +22,12 @@ public class Ecosystem {
 
     public void setName(String name) {
         this.name = name;
+    }
+    public EnvironmentSettings getEnvironmentSettings() {
+        return environmentSettings;
+    }
+    public void setEnvironmentSettings(EnvironmentSettings environmentSettings) {
+        this.environmentSettings = environmentSettings;
     }
 
     public void addAnimal(Animal animal) {
@@ -39,20 +47,23 @@ public class Ecosystem {
     }
 
     public Plant getPlant(String name) {
-        for(Plant plant : plants) {
-            if(plant.getName().equals(name)) {
+        for (Plant plant : plants) {
+            if (plant.getName().equals(name)) {
                 return plant;
             }
-        }return null;
+        }
+        return null;
     }
 
     public Animal getAnimal(String name) {
-      for(Animal animal : animals) {
-          if(animal.getName().equals(name)) {
-              return animal;
-          }
-      }return null;
+        for (Animal animal : animals) {
+            if (animal.getName().equals(name)) {
+                return animal;
+            }
+        }
+        return null;
     }
+
     public void deleteAnimal(String animalName) {
         animals.removeIf(animal -> animal.getName().equals(animalName));
     }
@@ -71,10 +82,11 @@ public class Ecosystem {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("Ecosystem: " + name + "\nAnimals:\n");
+        StringBuilder sb = new StringBuilder(name + "\nAnimals:\n");
         animals.forEach(animal -> sb.append("- ").append(animal).append("\n"));
         sb.append("Plants:\n");
         plants.forEach(plant -> sb.append("- ").append(plant).append("\n"));
+        sb.append("EnvironmentSettings:\n- ").append(environmentSettings.toString());
         return sb.toString();
     }
 }

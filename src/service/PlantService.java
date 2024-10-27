@@ -21,7 +21,7 @@ public class PlantService {
 
     public void managePlants(Ecosystem ecosystem, Scanner scanner) {
         while (true) {
-            System.out.print("Plant management (add/edit/remove)? (a/e/r/n): ");
+            System.out.print("manage plants  (add/edit/remove)? (a/e/r/n): ");
             String action = scanner.nextLine().toLowerCase();
             switch (action) {
                 case "a":
@@ -44,7 +44,7 @@ public class PlantService {
     private void addPlant(Ecosystem ecosystem, Scanner scanner) {
         System.out.print("Enter the name of the plant: ");
         String plantName = scanner.nextLine();
-        int quantity = InputValidator.getValidIntInput(scanner, "Enter the quantity: ");
+        int quantity = InputValidator.getValidPositiveIntInput(scanner, "Enter the quantity: ");
         Plant plant = new Plant(plantName, quantity);
         ecosystem.addPlant(plant);
     }
@@ -59,7 +59,7 @@ public class PlantService {
             if (!newPlantName.isEmpty()) {
                 plant.setName(newPlantName);
             }
-            int newQuantity = InputValidator.getValidIntInput(scanner, "Enter the new quantity: ");
+            int newQuantity = InputValidator.getValidPositiveIntInput(scanner, "Enter the new quantity: ");
             plant.setQuantity(newQuantity);
             System.out.println("Plant updated: " + plant);
         } else {

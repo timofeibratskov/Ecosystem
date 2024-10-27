@@ -7,6 +7,7 @@ public class Animal {
     private int population;
     private AnimalType animalType;
 
+
     public Animal(String name, int population, AnimalType animalType) {
         this.name = name;
         this.population = population;
@@ -16,6 +17,7 @@ public class Animal {
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -23,6 +25,7 @@ public class Animal {
     public int getPopulation() {
         return population;
     }
+
     public void setPopulation(int population) {
         this.population = population;
     }

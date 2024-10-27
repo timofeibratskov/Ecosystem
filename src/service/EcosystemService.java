@@ -12,11 +12,13 @@ public class EcosystemService {
     private final EcosystemRepository ecosystemRepository;
     private final AnimalService animalService;
     private final PlantService plantService;
+    private final EnvironmentSettingsService environmentSettingsService;
 
     private EcosystemService(EcosystemRepository ecosystemRepository) {
         this.ecosystemRepository = ecosystemRepository;
         this.animalService = AnimalService.getInstance();
         this.plantService = PlantService.getInstance();
+        this.environmentSettingsService = EnvironmentSettingsService.getInstance();
     }
 
     public static EcosystemService getInstance(EcosystemRepository repository) {
@@ -44,7 +46,7 @@ public class EcosystemService {
                     1. Change ecosystem name
                     2. Manage animals
                     3. Manage plants
-                    4. Save ecosystem
+                    4. Manage environmentSettings
                     5. Exit""");
 
             int choice = InputValidator.getValidIntInput(scanner, "Choose an option: ");
@@ -60,10 +62,11 @@ public class EcosystemService {
                     plantService.managePlants(ecosystem, scanner);
                     break;
                 case 4:
-                    saveEcosystem(ecosystem);
+                    environmentSettingsService.manageEnvSettings(ecosystem, scanner);
                     break;
                 case 5:
-                    return; // Exit editing
+                    saveEcosystem(ecosystem);
+                    return;
                 default:
                     System.out.println("Invalid option. Please try again:");
             }

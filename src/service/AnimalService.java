@@ -45,7 +45,7 @@ public class AnimalService {
     private void addAnimal(Ecosystem ecosystem, Scanner scanner) {
         System.out.print("Enter animal name: ");
         String animalName = scanner.nextLine();
-        int population = InputValidator.getValidIntInput(scanner, "Enter quantity: ");
+        int population = InputValidator.getValidPositiveIntInput(scanner, "Enter quantity: ");
         AnimalType type = getAnimalType(scanner);
         Animal animal = new Animal(animalName, population, type);
         ecosystem.addAnimal(animal);
@@ -61,7 +61,7 @@ public class AnimalService {
             if (!newAnimalName.isEmpty()) {
                 animal.setName(newAnimalName);
             }
-            int newPopulation = InputValidator.getValidIntInput(scanner, "Enter new quantity: ");
+            int newPopulation = InputValidator.getValidPositiveIntInput(scanner, "Enter new quantity: ");
             animal.setPopulation(newPopulation);
             System.out.println("Animal updated: " + animal);
         } else {

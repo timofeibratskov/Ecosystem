@@ -5,10 +5,10 @@ import entity.Ecosystem;
 import entity.Plant;
 import enums.AnimalType;
 
-import java.io.FileWriter;
 import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.FileWriter;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -30,7 +30,7 @@ public class FileEcosystemRepository implements EcosystemRepository {
     }
 
     public static FileEcosystemRepository getInstance() {
-        if (instance == null) {
+        if (instance==null) {
             synchronized (FileEcosystemRepository.class) {
                 if (instance == null) {
                     instance = new FileEcosystemRepository();
@@ -43,6 +43,11 @@ public class FileEcosystemRepository implements EcosystemRepository {
     @Override
     public void save(Ecosystem ecosystem) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(FOLDERPATH + ecosystem.getName() + ".txt"))) {
+            writer.println("Temperature:" + ecosystem.getEnvironmentSettings().getTemperature());
+            writer.println("WaterVolume:" + ecosystem.getEnvironmentSettings().getWaterVolume());
+            writer.println("Humidity:" + ecosystem.getEnvironmentSettings().getHumidity());
+            writer.println("PrecipitationChance:" + ecosystem.getEnvironmentSettings().getPrecipitationChance());
+
             ecosystem.getAnimals().forEach(animal ->
                     writer.println("Animal:" + animal.getName() + "," + animal.getPopulation() + "," + animal.getAnimalType())
             );
@@ -53,7 +58,6 @@ public class FileEcosystemRepository implements EcosystemRepository {
             System.err.println("Could not save ecosystem: " + e.getMessage());
         }
     }
-
 
     @Override
     public Ecosystem load(String name) {
@@ -69,19 +73,28 @@ public class FileEcosystemRepository implements EcosystemRepository {
                 String type = parts[0];
                 String[] details = parts[1].split(",");
 
-                if (type.equals("Animal")) {
-                    if (details.length < 3) {
-                        System.err.println("Invalid animal format: " + parts[1]);
-                        continue;
+                switch (type) {
+                    case "temperature" -> ecosystem.getEnvironmentSettings().setTemperature(Integer.parseInt(parts[1]));
+                    case "WaterVolume" ->
+                            ecosystem.getEnvironmentSettings().setWaterVolume(Double.parseDouble(parts[1]));
+                    case "Humidity" -> ecosystem.getEnvironmentSettings().setHumidity(Integer.parseInt(parts[1]));
+                    case "PrecipitationChance" ->
+                            ecosystem.getEnvironmentSettings().setPrecipitationChance(Integer.parseInt(parts[1]));
+                    case "Animal" -> {
+                        if (details.length < 3) {
+                            System.err.println("Invalid animal format: " + parts[1]);
+                            continue;
+                        }
+                        AnimalType animalType = AnimalType.valueOf(details[2].toUpperCase());
+                        ecosystem.addAnimal(new Animal(details[0], Integer.parseInt(details[1]), animalType));
                     }
-                    AnimalType animalType = AnimalType.valueOf(details[2].toUpperCase());
-                    ecosystem.addAnimal(new Animal(details[0], Integer.parseInt(details[1]), animalType));
-                } else if (type.equals("Plant")) {
-                    if (details.length < 2) {
-                        System.err.println("Invalid plant format: " + parts[1]);
-                        continue;
+                    case "Plant" -> {
+                        if (details.length < 2) {
+                            System.err.println("Invalid plant format: " + parts[1]);
+                            continue;
+                        }
+                        ecosystem.addPlant(new Plant(details[0], Integer.parseInt(details[1])));
                     }
-                    ecosystem.addPlant(new Plant(details[0], Integer.parseInt(details[1])));
                 }
             }
         } catch (IOException e) {
@@ -90,6 +103,7 @@ public class FileEcosystemRepository implements EcosystemRepository {
         }
         return ecosystem;
     }
+
 
     @Override
     public void delete(String name) {
