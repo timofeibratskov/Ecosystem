@@ -13,12 +13,14 @@ public class EcosystemService {
     private final AnimalService animalService;
     private final PlantService plantService;
     private final EnvironmentSettingsService environmentSettingsService;
+    private final PredictService predictService;
 
     private EcosystemService(EcosystemRepository ecosystemRepository) {
         this.ecosystemRepository = ecosystemRepository;
         this.animalService = AnimalService.getInstance();
         this.plantService = PlantService.getInstance();
         this.environmentSettingsService = EnvironmentSettingsService.getInstance();
+        this.predictService = PredictService.getInstance();
     }
 
     public static EcosystemService getInstance(EcosystemRepository repository) {
@@ -29,8 +31,17 @@ public class EcosystemService {
     }
 
     public Ecosystem createEcosystem(Scanner scanner) {
-        System.out.print("Enter the name of the ecosystem: ");
-        String name = scanner.nextLine();
+        String name;
+        while (true) {
+            System.out.print("Enter the name of the ecosystem: ");
+            name = scanner.nextLine();
+            List<String> ecosystemNames = getAllEcosystemNames();
+            if (ecosystemNames.contains(name)) {
+                System.out.println("Ecosystem already exists!");
+            } else {
+                break;
+            }
+        }
         Ecosystem ecosystem = new Ecosystem(name);
 
         animalService.manageAnimals(ecosystem, scanner);
@@ -47,9 +58,10 @@ public class EcosystemService {
                     2. Manage animals
                     3. Manage plants
                     4. Manage environmentSettings
-                    5. Exit""");
+                    5. check predicts
+                    6. Exit""");
 
-            int choice = InputValidator.getValidIntInput(scanner, "Choose an option: ");
+            int choice = InputValidator.getValidIntInput(scanner, "Choose an option: ", value -> 1 <= value && value <= 6);
 
             switch (choice) {
                 case 1:
@@ -65,10 +77,11 @@ public class EcosystemService {
                     environmentSettingsService.manageEnvSettings(ecosystem, scanner);
                     break;
                 case 5:
+                    predictService.predictPopulationChanges(ecosystem);
+                    return;
+                case 6:
                     saveEcosystem(ecosystem);
                     return;
-                default:
-                    System.out.println("Invalid option. Please try again:");
             }
         }
     }
@@ -76,8 +89,18 @@ public class EcosystemService {
     private void editEcosystemName(Ecosystem ecosystem, Scanner scanner) {
         System.out.print("Do you want to change the ecosystem name? (y/n): ");
         if (scanner.nextLine().equalsIgnoreCase("y")) {
-            System.out.print("Enter the new ecosystem name: ");
-            String newName = scanner.nextLine();
+            String newName;
+            while (true) {
+                System.out.print("Enter the new ecosystem name: ");
+                newName = scanner.nextLine();
+                List<String> ecosystemNames = getAllEcosystemNames();
+                if (ecosystemNames.contains(newName)) {
+                    System.out.println("Ecosystem already exists!");
+                } else {
+                    break;
+                }
+            }
+            deleteEcosystem(ecosystem.getName());
             ecosystem.setName(newName);
             System.out.println("Ecosystem name changed to: " + newName);
         } else {
@@ -87,16 +110,16 @@ public class EcosystemService {
 
     public void saveEcosystem(Ecosystem ecosystem) {
         ecosystemRepository.save(ecosystem);
-        System.out.println("Ecosystem saved: " + ecosystem.getName());
     }
 
     public Ecosystem loadEcosystem(String name) {
+
         return ecosystemRepository.load(name);
     }
 
     public void deleteEcosystem(String name) {
         ecosystemRepository.delete(name);
-        System.out.println("Ecosystem deleted: " + name);
+
     }
 
     public List<String> getAllEcosystemNames() {

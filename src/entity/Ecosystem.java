@@ -26,14 +26,9 @@ public class Ecosystem {
     public EnvironmentSettings getEnvironmentSettings() {
         return environmentSettings;
     }
-    public void setEnvironmentSettings(EnvironmentSettings environmentSettings) {
-        this.environmentSettings = environmentSettings;
-    }
 
     public void addAnimal(Animal animal) {
-        if (animals.add(animal)) {
-            System.out.println("Added new animal: " + animal);
-        } else {
+        if (!animals.add(animal)) {
             System.out.println("Animal with name " + animal.getName() + " already exists.");
         }
     }
@@ -69,9 +64,7 @@ public class Ecosystem {
     }
 
     public void addPlant(Plant plant) {
-        if (plants.add(plant)) {
-            System.out.println("Added new plant: " + plant);
-        } else {
+        if (!plants.add(plant)) {
             System.out.println("Plant with name " + plant.getName() + " already exists.");
         }
     }

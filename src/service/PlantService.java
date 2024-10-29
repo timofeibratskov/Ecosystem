@@ -44,7 +44,7 @@ public class PlantService {
     private void addPlant(Ecosystem ecosystem, Scanner scanner) {
         System.out.print("Enter the name of the plant: ");
         String plantName = scanner.nextLine();
-        int quantity = InputValidator.getValidPositiveIntInput(scanner, "Enter the quantity: ");
+        int quantity = InputValidator.getValidIntInput(scanner, "Enter the quantity: ", value -> value >= 0);
         Plant plant = new Plant(plantName, quantity);
         ecosystem.addPlant(plant);
     }
@@ -59,7 +59,7 @@ public class PlantService {
             if (!newPlantName.isEmpty()) {
                 plant.setName(newPlantName);
             }
-            int newQuantity = InputValidator.getValidPositiveIntInput(scanner, "Enter the new quantity: ");
+            int newQuantity = InputValidator.getValidIntInput(scanner, "Enter the new quantity: ", value -> value >= 0);
             plant.setQuantity(newQuantity);
             System.out.println("Plant updated: " + plant);
         } else {

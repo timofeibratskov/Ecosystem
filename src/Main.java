@@ -13,9 +13,7 @@ public class Main {
     private static Scanner scanner;
 
     public static void main(String[] args) {
-        EcosystemRepository repository = FileEcosystemRepository.getInstance();
-        service = EcosystemService.getInstance(repository);
-        scanner = new Scanner(System.in);
+
 
         start();
     }
@@ -27,13 +25,15 @@ public class Main {
         System.out.println("4. Delete Ecosystem");
         System.out.println("5. Display All Ecosystems");
         System.out.println("6. Exit");
-        System.out.print("Choose an option: ");
     }
 
     public static void start() {
+        EcosystemRepository repository = FileEcosystemRepository.getInstance();
+        service = EcosystemService.getInstance(repository);
+        scanner = new Scanner(System.in);
         while (true) {
             printMenu();
-            int choice = getValidIntInput(scanner, "Choose an option: ");
+            int choice = getValidIntInput(scanner, "Choose an option: ", value -> 1 <= value && value <= 6);
 
             switch (choice) {
                 case 1 -> createEcosystem();
@@ -45,7 +45,6 @@ public class Main {
                     System.out.println("Exiting...");
                     return;
                 }
-                default -> System.out.println("Invalid option. Please try again.");
             }
         }
     }
@@ -65,8 +64,6 @@ public class Main {
         if (ecosystem != null) {
             System.out.println("Ecosystem found: ");
             System.out.println(ecosystem);
-        } else {
-            System.out.println("Ecosystem not found.");
         }
     }
 
@@ -97,11 +94,8 @@ public class Main {
     private static void listAllEcosystems() {
         List<String> ecosystemNames = service.getAllEcosystemNames();
 
-        if (ecosystemNames.isEmpty()) {
-            System.out.println("No ecosystems found.");
-        } else {
-            System.out.println("List of all ecosystems:");
-            ecosystemNames.forEach(name -> System.out.println("- " + name));
-        }
+        System.out.println("List of all ecosystems:");
+        ecosystemNames.forEach(name -> System.out.println("- " + name));
+
     }
 }

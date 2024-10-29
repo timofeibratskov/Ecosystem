@@ -46,7 +46,7 @@ public class EnvironmentSettings {
     @Override
     public String toString() {
         return "temperature=" + temperature + ", waterVolume="
-               + waterVolume + ", humidity=" + humidity +
+               + waterVolume + ",\n humidity=" + humidity +
                ", precipitationChance=" +precipitationChance;
     }
 }

@@ -14,6 +14,7 @@ public class EnvironmentSettingsService {
         }
         return instance;
     }
+
     private EnvironmentSettingsService() {
     }
 
@@ -43,22 +44,22 @@ public class EnvironmentSettingsService {
     }
 
     private void editTemperature(Ecosystem ecosystem, Scanner scanner) {
-        int temperature = InputValidator.getValidIntInput(scanner, "Enter temperature: ");
+        int temperature = InputValidator.getValidIntInput(scanner, "Enter temperature: ", value -> -40 <= value && value <= 40);
         ecosystem.getEnvironmentSettings().setTemperature(temperature);
     }
 
     private void editWaterVolume(Ecosystem ecosystem, Scanner scanner) {
-        int waterVolume = InputValidator.getValidPositiveIntInput(scanner, "Enter water volume: ");
+        double waterVolume = InputValidator.getValidDoubleInput(scanner, "Enter water volume: ", value -> value >= 0);
         ecosystem.getEnvironmentSettings().setWaterVolume(waterVolume);
     }
 
     private void editHumidity(Ecosystem ecosystem, Scanner scanner) {
-        int humidity = InputValidator.getValidPositiveIntInput(scanner, "Enter humidity: ");
+        int humidity = InputValidator.getValidIntInput(scanner, "Enter humidity (0-100): ", value -> value >= 0 && value <= 100);
         ecosystem.getEnvironmentSettings().setHumidity(humidity);
     }
 
     private void editPrecipitationChance(Ecosystem ecosystem, Scanner scanner) {
-        int precipitationChance = InputValidator.getValidPositiveIntInput(scanner, "Enter precipitation chance: ");
+        int precipitationChance = InputValidator.getValidIntInput(scanner, "Enter precipitation chance [0;6]: ", value -> value >= 0 && value <= 6);
         ecosystem.getEnvironmentSettings().setPrecipitationChance(precipitationChance);
     }
 }

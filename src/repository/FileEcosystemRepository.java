@@ -30,7 +30,7 @@ public class FileEcosystemRepository implements EcosystemRepository {
     }
 
     public static FileEcosystemRepository getInstance() {
-        if (instance==null) {
+        if (instance == null) {
             synchronized (FileEcosystemRepository.class) {
                 if (instance == null) {
                     instance = new FileEcosystemRepository();
@@ -55,7 +55,7 @@ public class FileEcosystemRepository implements EcosystemRepository {
                     writer.println("Plant:" + plant.getName() + "," + plant.getQuantity())
             );
         } catch (IOException e) {
-            System.err.println("Could not save ecosystem: " + e.getMessage());
+            System.err.println("Could not save ecosystem");
         }
     }
 
@@ -98,7 +98,7 @@ public class FileEcosystemRepository implements EcosystemRepository {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Could not load ecosystem: " + e.getMessage());
+            System.out.println("such file name does not exist: " + name);
             return null;
         }
         return ecosystem;
@@ -110,7 +110,7 @@ public class FileEcosystemRepository implements EcosystemRepository {
         try {
             Files.delete(Paths.get(FOLDERPATH + name + ".txt"));
         } catch (IOException e) {
-            System.err.println("Could not delete ecosystem: " + e.getMessage());
+            System.out.println("such file name does not exist: " + name);
         }
     }
 
@@ -124,7 +124,7 @@ public class FileEcosystemRepository implements EcosystemRepository {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Could not list ecosystems: " + e.getMessage());
+            System.out.println("Could not list ecosystems");
         }
         return names;
     }
