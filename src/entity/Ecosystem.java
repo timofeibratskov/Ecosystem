@@ -13,7 +13,7 @@ public class Ecosystem {
         this.name = name;
         this.animals = new HashSet<>();
         this.plants = new HashSet<>();
-        this.environmentSettings = new EnvironmentSettings(24, 1000, 5);
+        this.environmentSettings = new EnvironmentSettings(20, 1000, 3);
     }
 
     public String getName() {

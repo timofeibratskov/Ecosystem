@@ -4,7 +4,6 @@ import entity.Animal;
 import entity.Ecosystem;
 import entity.Plant;
 import enums.AnimalType;
-
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.FileReader;
@@ -30,7 +29,7 @@ public class FileEcosystemRepository implements EcosystemRepository {
     }
 
     public static FileEcosystemRepository getInstance() {
-        if (instance == null) {
+        if (instance== null) {
             synchronized (FileEcosystemRepository.class) {
                 if (instance == null) {
                     instance = new FileEcosystemRepository();

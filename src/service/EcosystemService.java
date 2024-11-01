@@ -1,34 +1,37 @@
 package service;
 
+import entity.Animal;
 import entity.Ecosystem;
+import entity.Plant;
 import repository.EcosystemRepository;
 import util.InputValidator;
-
 import java.util.List;
 import java.util.Scanner;
 
+import static enums.AnimalType.CARNIVORE;
+import static enums.AnimalType.HERBIVORE;
+
 public class EcosystemService {
-    private static EcosystemService instance;
+
     private final EcosystemRepository ecosystemRepository;
     private final AnimalService animalService;
     private final PlantService plantService;
     private final EnvironmentSettingsService environmentSettingsService;
     private final PredictService predictService;
 
-    private EcosystemService(EcosystemRepository ecosystemRepository) {
+    public EcosystemService(EcosystemRepository ecosystemRepository,
+                            AnimalService animalService,
+                            PlantService plantService,
+                            EnvironmentSettingsService environmentSettingsService,
+                            PredictService predictService) {
         this.ecosystemRepository = ecosystemRepository;
-        this.animalService = AnimalService.getInstance();
-        this.plantService = PlantService.getInstance();
-        this.environmentSettingsService = EnvironmentSettingsService.getInstance();
-        this.predictService = PredictService.getInstance();
+        this.animalService = animalService;
+        this.plantService = plantService;
+        this.environmentSettingsService = environmentSettingsService;
+        this.predictService = predictService;
     }
 
-    public static EcosystemService getInstance(EcosystemRepository repository) {
-        if (instance == null) {
-            instance = new EcosystemService(repository);
-        }
-        return instance;
-    }
+
 
     public Ecosystem createEcosystem(Scanner scanner) {
         String name;
@@ -58,7 +61,7 @@ public class EcosystemService {
                     2. Manage animals
                     3. Manage plants
                     4. Manage environmentSettings
-                    5. check predicts
+                    5. Check predicts
                     6. Exit""");
 
             int choice = InputValidator.getValidIntInput(scanner, "Choose an option: ", value -> 1 <= value && value <= 6);
@@ -124,5 +127,21 @@ public class EcosystemService {
 
     public List<String> getAllEcosystemNames() {
         return ecosystemRepository.getAllEcosystems();
+    }
+    public long getAllHerbivorePopulation(Ecosystem ecosystem){
+        return ecosystem.getAnimals().stream()
+                .filter(animal -> animal.getAnimalType() == HERBIVORE)
+                .mapToInt(Animal::getPopulation)
+                .sum();
+    }
+    public long getAllCarnivorePopulation(Ecosystem ecosystem){
+        return ecosystem.getAnimals().stream()
+                .filter(animal -> animal.getAnimalType() == CARNIVORE)
+                .mapToInt(Animal::getPopulation)
+                .sum();
+    }
+    public long getAllPlantsQuantity(Ecosystem ecosystem) {
+        return ecosystem.getPlants().stream()
+                .mapToInt(Plant::getQuantity).sum();
     }
 }

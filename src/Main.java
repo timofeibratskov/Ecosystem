@@ -1,6 +1,8 @@
 import repository.EcosystemRepository;
 import repository.FileEcosystemRepository;
-import service.EcosystemService;
+import repository.LogFileSimulationRepository;
+import repository.SimulationRepository;
+import service.*;
 import entity.Ecosystem;
 
 import java.util.List;
@@ -9,11 +11,13 @@ import java.util.Scanner;
 import static util.InputValidator.getValidIntInput;
 
 public class Main {
+
     private static EcosystemService service;
     private static Scanner scanner;
+    private static Thread simulatorThread;
+    private static boolean isRunning = true;
 
     public static void main(String[] args) {
-
 
         start();
     }
@@ -23,15 +27,23 @@ public class Main {
         System.out.println("2. Display Ecosystem");
         System.out.println("3. Edit Ecosystem");
         System.out.println("4. Delete Ecosystem");
-        System.out.println("5. Display All Ecosystems");
+        System.out.println("5. Display All Ecosystem Names");
         System.out.println("6. Exit");
     }
 
     public static void start() {
         EcosystemRepository repository = FileEcosystemRepository.getInstance();
-        service = EcosystemService.getInstance(repository);
+        AnimalService animalService = new AnimalService();
+        PlantService plantService = new PlantService();
+        EnvironmentSettingsService environmentSettingsService = new EnvironmentSettingsService();
+        PredictService predictService = new PredictService(service);
+        service = new EcosystemService(repository, animalService, plantService, environmentSettingsService, predictService);
         scanner = new Scanner(System.in);
-        while (true) {
+        SimulationRepository simulationRepository = LogFileSimulationRepository.getInstance();
+        EcosystemsSimulatorService simulatorService = new EcosystemsSimulatorService(service, simulationRepository);
+        simulatorThread = new Thread(simulatorService::startEcosystemsSimulator);
+        simulatorThread.start();
+        while (isRunning) {
             printMenu();
             int choice = getValidIntInput(scanner, "Choose an option: ", value -> 1 <= value && value <= 6);
 
@@ -43,7 +55,13 @@ public class Main {
                 case 5 -> listAllEcosystems();
                 case 6 -> {
                     System.out.println("Exiting...");
-                    return;
+                    isRunning = false;
+                    simulatorService.stopEcosystemsSimulator(); // Остановка симуляции
+                    try {
+                        simulatorThread.join(); // Ждем завершения потока симуляции
+                    } catch (InterruptedException e) {
+                        System.err.println("Error while waiting for simulation thread to finish: " + e.getMessage());
+                    }
                 }
             }
         }
@@ -64,6 +82,8 @@ public class Main {
         if (ecosystem != null) {
             System.out.println("Ecosystem found: ");
             System.out.println(ecosystem);
+        } else {
+            System.out.println("Ecosystem not found.");
         }
     }
 
@@ -96,6 +116,5 @@ public class Main {
 
         System.out.println("List of all ecosystems:");
         ecosystemNames.forEach(name -> System.out.println("- " + name));
-
     }
 }

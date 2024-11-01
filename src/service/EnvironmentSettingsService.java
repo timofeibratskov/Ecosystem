@@ -2,25 +2,17 @@ package service;
 
 import entity.Ecosystem;
 import util.InputValidator;
-
 import java.util.Scanner;
 
 public class EnvironmentSettingsService {
-    private static EnvironmentSettingsService instance;
 
-    public static EnvironmentSettingsService getInstance() {
-        if (instance == null) {
-            instance = new EnvironmentSettingsService();
-        }
-        return instance;
-    }
 
-    private EnvironmentSettingsService() {
+    public EnvironmentSettingsService() {
     }
 
     public void manageEnvSettings(Ecosystem ecosystem, Scanner scanner) {
         while (true) {
-            System.out.print("Manage Environment Settings (t/w/h/p/n): ");
+            System.out.print("Manage Environment Settings: \ntemperature, waterVolume, humidity, precipitationChance\n(t/w/h/p/n):");
             String option = scanner.nextLine().toLowerCase();
             switch (option) {
                 case "t":

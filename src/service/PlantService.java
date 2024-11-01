@@ -7,17 +7,11 @@ import util.InputValidator;
 import java.util.Scanner;
 
 public class PlantService {
-    private static PlantService instance;
 
-    private PlantService() {
+    public PlantService() {
     }
 
-    public static PlantService getInstance() {
-        if (instance == null) {
-            instance = new PlantService();
-        }
-        return instance;
-    }
+
 
     public void managePlants(Ecosystem ecosystem, Scanner scanner) {
         while (true) {
@@ -74,3 +68,4 @@ public class PlantService {
         System.out.println("Plant removed: " + plantName);
     }
 }
+

@@ -5,6 +5,8 @@ out/
 
 ### all ecosystems ###
 ecosystems/
+###all logs###
+logs/
 
 ### Eclipse ###
 .apt_generated

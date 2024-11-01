@@ -7,18 +7,11 @@ import util.InputValidator;
 
 import java.util.Scanner;
 
+
+
 public class AnimalService {
-    private static AnimalService instance;
 
-    private AnimalService() {
-    }
-
-    public static AnimalService getInstance() {
-        if (instance == null) {
-            instance = new AnimalService();
-        }
-        return instance;
-    }
+   public AnimalService() {}
 
     public void manageAnimals(Ecosystem ecosystem, Scanner scanner) {
         while (true) {

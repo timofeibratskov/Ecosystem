@@ -1,41 +1,31 @@
 package config;
+
 public class PredictConfig {
     private static final PredictConfig instance = new PredictConfig();
 
-    private final double waterConsumptionPerPlant = 0.2;
-    private final double waterConsumptionPerAnimal = 0.1;
-    private final double diseaseProbability = 0.1;
-    private final double herbivoreGrowthRate = 0.35;
-    private final double maxPredatorProbability = 0.2;
-    private final double carnivoreGrowthRate = 0.445;
+    private final double WATERCONSUMPTIONPERPLANT = 5;
+    private final double WATERCONSUMPTIONPERANIMAL = 4;
+    private final double DISEASEPROBABILITY = 0.07;   //вероятность болезни
+    private final int WTERINCREASE = 999; // фиксированное добавление воды после осадков
 
-    private PredictConfig() {}
 
     public static PredictConfig getInstance() {
         return instance;
     }
 
+    public int getWaterIncrease() {
+        return WTERINCREASE;
+    }
+
     public double getWaterConsumptionPerPlant() {
-        return waterConsumptionPerPlant;
+        return WATERCONSUMPTIONPERPLANT;
     }
 
     public double getWaterConsumptionPerAnimal() {
-        return waterConsumptionPerAnimal;
+        return WATERCONSUMPTIONPERANIMAL;
     }
 
     public double getDiseaseProbability() {
-        return diseaseProbability;
-    }
-
-    public double getHerbivoreGrowthRate() {
-        return herbivoreGrowthRate;
-    }
-
-    public double getMaxPredatorProbability() {
-        return maxPredatorProbability;
-    }
-
-    public double getCarnivoreGrowthRate() {
-        return carnivoreGrowthRate;
+        return DISEASEPROBABILITY;
     }
 }
