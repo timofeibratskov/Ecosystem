@@ -26,7 +26,7 @@ public class EcosystemsSimulatorService {
     public EcosystemsSimulatorService(EcosystemService ecosystemService, SimulationRepository simulationRepository) {
         this.ecosystems = new ArrayList<>();
         this.ecosystemService = ecosystemService;
-        this.simulationRepository = simulationRepository; // Инициализация simulationRepository
+        this.simulationRepository = simulationRepository;
         this.config = PredictConfig.getInstance();
     }
 
